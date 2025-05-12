@@ -1,59 +1,80 @@
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2)   
+# `faster-whisper-xxl` için Toplu Transkripsiyon Arayüzü 
 
-![alt text](https://i.imgur.com/DYVm3u6.png)
+Bu Python script'i, [Purfview/whisper-standalone-win](https://github.com/Purfview/whisper-standalone-win) projesindeki güçlü `faster-whisper-xxl.exe` aracı için kullanıcı dostu bir komut satırı arayüzü (CLI) sağlar. Amacı, `faster-whisper-xxl`'nin sunduğu birçok ayarı interaktif olarak yönetmeyi kolaylaştırmak, toplu işlem yetenekleri sunmak ve çıktı dosyaları üzerinde ek işlemler (zaman damgası temizleme ve paragraf birleştirme gibi) yapmaktır.
 
-[Standalone executables](https://github.com/Purfview/whisper-standalone-win/releases) of [OpenAI's Whisper](https://github.com/openai/whisper) & [Faster-Whisper](https://github.com/guillaumekln/faster-whisper) for those who don't want to bother with Python.
+## ✨ Özellikler
 
-**Faster-Whisper** - executables are x86-64 compatible with Windows 7, Linux v5.4, macOS v10.15 and above.   
-**Faster-Whisper-XXL** - the last executables are x86-64 compatible with Windows 10, Linux v5.15 and above.       
-[**Faster-Whisper-XXL Pro**](https://github.com/Purfview/whisper-standalone-win/discussions/456) - as above. Special non-public version for the donators.           
-**Whisper** - executables are x86-64 compatible with Windows 10 and above.   
-     
-Meant to be used in command-line interface or in programs like:   
-[Subtitle Edit](https://github.com/SubtitleEdit/subtitleedit), [Tero Subtitler](https://github.com/URUWorks/TeroSubtitler), [FFAStrans](https://ffastrans.com/wp/), [AviUtl](https://github.com/oov/aviutl_subtitler), [PotPlayer](https://potplayer.daum.net)           
-Faster-Whisper is much faster & better than OpenAI's Whisper, and it requires less RAM/VRAM.
+*   **İnteraktif Komut Satırı Arayüzü:** Ayarları kolayca seçmek için adım adım yönlendirme.
+*   **Model Seçimi:** Kullanılabilir Whisper/Faster-Whisper modelleri arasından seçim yapma (`tiny`, `base`, `small`, `medium`, `large-v2`, `large-v3`, `large-v3-turbo`).
+*   **Dil Seçimi:** Transkripsiyon dilini belirtme veya otomatik algılamaya bırakma.
+*   **Toplu İşlem:**
+    *   Tek bir medya dosyası işleme.
+    *   Birden fazla medya dosyasını (boşlukla ayırarak) işleme.
+    *   Bir klasördeki tüm desteklenen medya dosyalarını işleme.
+    *   Komut satırı argümanları ile dosya/klasör/uzantı (`*.mp4` gibi) belirtme.
+*   **Çıktı Formatı Seçimi:** Zaman damgası istendiğinde `srt`, `vtt`, `txt`, `json`, `lrc`, `tsv` veya `all` formatlarından bir veya birkaçını seçme.
+*   **Zaman Damgası Yönetimi:**
+    *   Çıktıda zaman damgalarının görünmesini isteme (SRT, VTT vb. için).
+    *   Çıktıda zaman damgalarının görünmesini **istememe**: Bu durumda çıktı otomatik olarak `.txt` olur ve transkripsiyon sonrası `.txt` dosyasındaki `[MM:SS.mmm --> MM:SS.mmm]` formatındaki **zaman damgaları temizlenir** ve **tüm satırlar tek bir paragrafa birleştirilir.**
+*   **Satır Formatlama:** Zaman damgalı çıktılar için satır bölme stillerini (`--sentence`, `--standard`, `--standard_asia`) seçme.
+*   **Ekstra Özellikler:**
+    *   Konuşmacı Ayrıştırma (Diarization - pyannote) seçeneği.
+    *   Vokal Ayıklama (MDX Kim v2 modeli) seçeneği.
+*   **Ayarları Kaydetme/Yükleme:** Sık kullandığınız ayarları otomatik olarak `config.json` dosyasına kaydeder ve bir sonraki çalıştırmada bu ayarları kullanmayı teklif eder.
 
-## Usage examples:
-* `faster-whisper-xxl.exe "D:\videofile.mkv" --language English --model medium --output_dir source`
-* `faster-whisper-xxl.exe "D:\Folder" -l en -m turbo --sentence --batch_recursive`
-* `faster-whisper-xxl.exe "D:\videofile.mkv" -l ja -m medium --task translate --standard -o source`      
-* `faster-whisper-xxl.exe --help`
+## ⚙️ Gereksinimler
 
-## Notes:
+1.  **`faster-whisper-xxl.exe`:** Bu script, `faster-whisper-xxl.exe` programının ve onun bağımlılıklarının (`_models` klasörü vb.) sisteminizde **bu script ile aynı dizinde** bulunmasını bekler. Buradan indirebilirsiniz: [Purfview/whisper-standalone-win Releases](https://github.com/Purfview/whisper-standalone-win/releases)
+2.  **Python 3.x:** Sisteminizde Python 3'ün yüklü olması ve komut satırından `python` komutuyla erişilebilir olması gerekir (PATH ortam değişkenine eklenmiş olmalıdır). Python'u [python.org](https://www.python.org/downloads/) adresinden indirebilirsiniz.
 
-Executables & libs can be downloaded from `Releases`. [at the right side of this page]    
-Don't copy programs to the Windows' folders! [run as Administrator if you did]       
-Programs automatically will choose to work on GPU if CUDA is detected.   
-For decent transcription use not smaller than `medium` model.   
-Guide how to run the command line programs: https://www.youtube.com/watch?v=A3nwRCV-bTU     
+## 🚀 Kurulum ve Kullanım
 
-## Standalone Whisper info:
+1.  **İndirme:** Bu Python script dosyasını (`command-ui.py` veya verdiğiniz isimle) indirin.
+2.  **Yerleştirme:** Script dosyasını, `faster-whisper-xxl.exe`'nin bulunduğu klasörün içine kopyalayın.
+3.  **Çalıştırma:**
+    *   Komut istemcisini (CMD veya PowerShell) açın.
+    *   `cd` komutu ile script'in ve `faster-whisper-xxl.exe`'nin bulunduğu dizine gidin.
+        ```bash
+        cd /d "C:\path\to\your\faster-whisper-folder"
+        ```
+    *   Script'i Python ile çalıştırın:
+        ```bash
+        python command-ui.py
+        ```
+    *   **Dosya/Klasör Belirtme:**
+        *   Script'i argümansız çalıştırırsanız, sizden işlenecek klasörün veya dosya(lar)ın yolunu/uzantınızı girmenizi isteyecektir.
+        *   Alternatif olarak, dosya/klasör/uzantı yollarını doğrudan komut satırı argümanı olarak verebilirsiniz:
+            ```bash
+            # Tek dosya
+            python command-ui.py "C:\videos\my_video.mp4"
 
-Vanilla Whisper, compiled as is - no changes to the original code.   
-A reference implementation, stagnant development, atm maybe useful for some tests.
-   
-## Standalone Faster-Whisper info:
+            # Bir klasördeki tüm desteklenen dosyalar
+            python command-ui.py "C:\audio_files\"
 
-Some defaults are tweaked for movies transcriptions and to make it portable.    
-Features various new experimental settings and tweaks.   
-Shows the progress bar in the title bar of command-line interface. [or it can be printed with `-pp`]   
-By default it looks for models in the same folder, in path like this -> `_models\faster-whisper-medium`.   
-Models are downloaded automatically or can be downloaded manually from: [Systran](https://huggingface.co/Systran) & [Purfview](https://huggingface.co/Purfview)        
-Deprecated. Use Faster-Whisper-XXL
+            # Belirli bir uzantıya uyan dosyalar (örn: tüm mp3ler)
+            python command-ui.py *.mp3
 
-## Standalone Faster-Whisper-XXL info:
+            # Birden fazla dosya/klasör (komut istemcisinin yorumlamasına bağlı olabilir)
+            python command-ui.py "file1.wav" "C:\my_folder\" *.mkv 
+            ```
+    *   **Ayarları Takip Etme:** Script sizi ayarlar konusunda yönlendirecektir.
 
-Includes all Standalone Faster-Whisper features + the additional ones, for example:   
-Preprocess audio with MDX23 Kim_vocal_v2 vocal extraction model.   
-Alternative VAD methods: 'silero_v3', 'silero_v4', 'silero_v5', 'pyannote_v3', 'pyannote_onnx_v3', 'auditok', 'webrtc'.   
-[Speaker Diarization](https://github.com/Purfview/whisper-standalone-win/discussions/322).    
-Read more about new features in [the Discussions' thread](https://github.com/Purfview/whisper-standalone-win/discussions/231).
+## 💾 Yapılandırma Dosyası (`config.json`)
 
-## Standalone Faster-Whisper-XXL Pro info:    
-    
-Special non-public version for the donators.     
-Includes some new advanced features, there is the log: [the Discussions' thread](https://github.com/Purfview/whisper-standalone-win/discussions/456).  
-       
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2)
+*   Script, ilk başarılı çalıştırmadan sonra (veya siz isterseniz), seçtiğiniz ayarları (model, dil, format tercihleri vb.) script ile aynı dizinde bulunan `config.json` dosyasına kaydeder.
+*   Script bir sonraki çalıştırılışında bu dosyayı bulursa, size bu kayıtlı ayarları kullanıp kullanmak istemediğinizi sorar.
+    *   "Evet" derseniz, ayar sorma adımları atlanır ve kayıtlı ayarlarla işlem yapılır.
+    *   "Hayır" derseniz, size tüm ayarları yeniden sorar ve isterseniz yeni ayarları kaydedebilirsiniz.
+*   Bu dosyayı manuel olarak (dikkatlice) düzenleyebilirsiniz, ancak genellikle script'in sormasını beklemek daha güvenlidir.
 
+## 📝 Notlar ve İpuçları
 
+*   **Zaman Damgası Temizleme ve Paragraf:** "Çıktıda zaman damgaları görünsün mü?" sorusuna "Hayır" demek, çıktının sadece `.txt` olmasını sağlar ve işlem bittikten sonra bu `.txt` dosyasındaki `[MM:SS.mmm --> MM:SS.mmm]` etiketleri silinerek tüm metin tek bir paragrafa birleştirilir.
+*   **Dosya Yolları:** Komut satırından veya interaktif olarak dosya/klasör yolu girerken, yolda boşluk varsa yolu çift tırnak (`"`) içine almanız önerilir.
+*   **`-o source` Varsayımı:** Script, `faster-whisper-xxl.exe`'nin `-o source` argümanıyla çalıştığını varsayar (çıktılar orijinal dosyanın yanına kaydedilir). Zaman damgası temizleme işlemi de çıktı `.txt` dosyasını burada arar.
+*   **Hata Yönetimi:** Script temel hata kontrolleri yapar (dosya bulunamadı vb.), ancak `faster-whisper-xxl.exe`'nin kendisinden kaynaklanan hatalar için programın kendi çıktılarını takip etmeniz gerekebilir.
+
+## 🙏 Bağımlılıklar ve Teşekkür
+
+*   Bu script, **`faster-whisper-xxl.exe`** üzerine kurulmuştur.
+*   Orijinal `whisper-standalone-win` projesi ve geliştiricisi **Purfview**'e teşekkürler. [GitHub Deposu](https://github.com/Purfview/whisper-standalone-win)
