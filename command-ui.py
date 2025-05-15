@@ -14,7 +14,7 @@ EXE_PATH = os.path.join(SCRIPT_DIR, "faster-whisper-xxl.exe")
 CONFIG_FILE = os.path.join(SCRIPT_DIR, "config.json")
 # Desteklenen dosya uzantıları (küçük harfle)
 SUPPORTED_EXTENSIONS = ['.mp3', '.wav', '.flac', '.ogg', '.m4a', 
-                        '.mp4', '.mkv', '.mov', '.avi', '.wmv', '.flv']
+                        '.mp4', '.mkv', '.mov', '.avi', '.wmv', '.flv', '.ts']
 
 # --- Yardımcı Fonksiyonlar ---
 def get_user_choice(prompt, options, default_key=None):
